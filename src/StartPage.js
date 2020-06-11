@@ -1,5 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import React from 'react';
 import {Button, Col, Form, Row} from 'react-bootstrap';
 import './App.css';

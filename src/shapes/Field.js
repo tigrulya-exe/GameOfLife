@@ -1,11 +1,9 @@
 export default class Field {
-    constructor(width, height, cells, cellSize) {
-        this.width = width;
-        this.height = height;
-        this.cellSize = cellSize;
+    constructor(cells) {
+        this.width = cells.length;
+        this.height = cells[0].length;
         this.cells = cells;
         this.isAliveMask = [];
-
         for (let x = 0; x < this.width; ++x) {
             this.isAliveMask.push([]);
             for (let y = 0; y < this.height; ++y) {

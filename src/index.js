@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <StartPage />
+    <StartPage xCount={108} yCount={108} />
   </React.StrictMode>,
   document.getElementById('root')
 );

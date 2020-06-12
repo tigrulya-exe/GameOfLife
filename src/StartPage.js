@@ -12,15 +12,15 @@ export default class StartPage extends React.Component {
     constructor(props) {
         super(props);
         // tmp
-        const cellSize = 10;
-
+        this.offset = 1;
         this.state = {
-            xCount: 50,
-            yCount: 50,
-            canvasWidth: 602,
-            canvasHeight: 602,
+            xCount: props.xCount,
+            yCount: props.yCount,
+            cellSize: 5,
+            canvasWidth: 652,
+            canvasHeight: 652,
             epochDuration: 500,
-            field: new Field(50, 50, initCells(50, 50, cellSize, 2), cellSize),
+            field: new Field(initCells(props.xCount, props.yCount, 5, this.offset)),
             epoch: 0,
             drawMode: false
         };
@@ -44,11 +44,10 @@ export default class StartPage extends React.Component {
     drawField = () => {
         const ctx = this.canvas.current.getContext('2d');
         const field = this.state.field;
-
         ctx.beginPath();
-        for (let x = 0; x < 50; ++x) {
-            for (let y = 0; y < 50; ++y) {
-                ctx.rect(field.cells[x][y].x, field.cells[x][y].y, field.cellSize, field.cellSize);
+        for (let x = 0; x < this.state.xCount; ++x) {
+            for (let y = 0; y < this.state.yCount; ++y) {
+                ctx.rect(field.cells[x][y].x, field.cells[x][y].y, this.state.cellSize, this.state.cellSize);
             }
         }
         ctx.fillStyle = FIELD_COLOR;
@@ -61,10 +60,10 @@ export default class StartPage extends React.Component {
         const field = this.state.field;
 
         ctx.beginPath();
-        for (let x = 0; x < 50; ++x) {
-            for (let y = 0; y < 50; ++y) {
+        for (let x = 0; x < this.state.xCount; ++x) {
+            for (let y = 0; y < this.state.yCount; ++y) {
                 if (field.cells[x][y].isAlive) {
-                    ctx.rect(field.cells[x][y].x, field.cells[x][y].y, field.cellSize, field.cellSize);
+                    ctx.rect(field.cells[x][y].x, field.cells[x][y].y, this.state.cellSize, this.state.cellSize);
                 }
             }
         }
@@ -73,7 +72,7 @@ export default class StartPage extends React.Component {
         ctx.closePath();
     };
 
-    updateCanvas = () => {
+        updateCanvas = () => {
         this.drawField();
         this.drawAliveCells();
     };
@@ -88,7 +87,8 @@ export default class StartPage extends React.Component {
     };
 
     onCanvasClick = (event) => {
-        this.state.field.changeCellStatus(getCellX(event), getCellY(event));
+        this.state.field.changeCellStatus(getCellX(event, this.state.cellSize, this.offset),
+            getCellY(event, this.state.cellSize, this.offset));
         this.updateCanvas();
     };
 
@@ -107,7 +107,8 @@ export default class StartPage extends React.Component {
     };
 
     onMouseMove = (event) => {
-        this.state.field._changeCellStatus(getCellX(event), getCellY(event), true);
+        this.state.field._changeCellStatus(getCellX(event, this.state.cellSize, this.offset),
+            getCellY(event, this.state.cellSize, this.offset), true);
         this.updateCanvas();
     };
 

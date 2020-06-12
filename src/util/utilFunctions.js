@@ -1,11 +1,11 @@
 import Cell from "../shapes/Cell";
 
-function getCellX(event){
-    return Math.floor((event.pageX - event.currentTarget.offsetLeft) / (12))
+function getCellX(event, cellSize, offset){
+    return Math.floor((event.pageX - event.currentTarget.offsetLeft) / (cellSize + offset))
 }
 
-function getCellY(event){
-    return Math.floor((event.pageY - event.currentTarget.offsetTop) / (12))
+function getCellY(event, cellSize, offset){
+    return Math.floor((event.pageY - event.currentTarget.offsetTop) / (cellSize + offset))
 }
 
 function initCells(xCount, yCount, cellSize, offset) {

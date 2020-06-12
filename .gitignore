@@ -12,6 +12,8 @@
 # production
 /build
 
+game-of-life.iml
+
 # misc
 .DS_Store
 .env.local

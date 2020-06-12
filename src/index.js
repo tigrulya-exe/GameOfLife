@@ -1,14 +1,14 @@
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import StartPage from './StartPage';
-import * as serviceWorker from './serviceWorker';
+import App from './components/App';
+import * as ServiceWorker from './ServiceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <StartPage xCount={108} yCount={108} />
+    <App xCount={108} yCount={108} />
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-serviceWorker.unregister();
+ServiceWorker.unregister();

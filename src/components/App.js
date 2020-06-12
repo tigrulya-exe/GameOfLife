@@ -1,28 +1,29 @@
 import React from 'react';
-import {Button, Col, Form, Row} from 'react-bootstrap';
 import './App.css';
-import {getCellX, getCellY, initCells} from './util/utilFunctions'
-import Field from "./shapes/Field";
+import {Button, Col, Form, Row} from 'react-bootstrap';
+import {getCellX, getCellY, initCells} from '../util/UtilFunctions'
+import Field from "../model/Field";
 import RangeSlider from 'react-bootstrap-range-slider';
+import SizePicker from "./SizePicker";
 
 const FIELD_COLOR = "#FFCAC2";
 const ALIVE_COLOR = "#900C3F";
 
-export default class StartPage extends React.Component {
+export default class App extends React.Component {
     constructor(props) {
         super(props);
-        // tmp
-        this.offset = 1;
         this.state = {
-            xCount: props.xCount,
-            yCount: props.yCount,
+            offset: 1,
+            xCount: 108,
+            yCount: 108,
             cellSize: 5,
             canvasWidth: 652,
             canvasHeight: 652,
             epochDuration: 500,
-            field: new Field(initCells(props.xCount, props.yCount, 5, this.offset)),
             epoch: 0,
-            drawMode: false
+            field: new Field(initCells(props.xCount, props.yCount, props.cellSize || 5, props.offset || 1)),
+            drawMode: false,
+            ...props
         };
 
         this.canvas = React.createRef();
@@ -72,7 +73,7 @@ export default class StartPage extends React.Component {
         ctx.closePath();
     };
 
-        updateCanvas = () => {
+    updateCanvas = () => {
         this.drawField();
         this.drawAliveCells();
     };
@@ -87,8 +88,8 @@ export default class StartPage extends React.Component {
     };
 
     onCanvasClick = (event) => {
-        this.state.field.changeCellStatus(getCellX(event, this.state.cellSize, this.offset),
-            getCellY(event, this.state.cellSize, this.offset));
+        this.state.field.changeCellStatus(getCellX(event, this.state.cellSize, this.state.offset),
+            getCellY(event, this.state.cellSize, this.state.offset));
         this.updateCanvas();
     };
 
@@ -107,8 +108,8 @@ export default class StartPage extends React.Component {
     };
 
     onMouseMove = (event) => {
-        this.state.field._changeCellStatus(getCellX(event, this.state.cellSize, this.offset),
-            getCellY(event, this.state.cellSize, this.offset), true);
+        this.state.field._changeCellStatus(getCellX(event, this.state.cellSize, this.state.offset),
+            getCellY(event, this.state.cellSize, this.state.offset), true);
         this.updateCanvas();
     };
 
@@ -118,9 +119,20 @@ export default class StartPage extends React.Component {
         }, () => this.start());
     };
 
+    onSizeSelect = (sizes) => {
+        this.onFlush();
+        this.setState({
+            ...sizes,
+            field: new Field(initCells(sizes.xCount, sizes.yCount, sizes.cellSize, sizes.offset)),
+        }, () => this.updateCanvas());
+    };
+
     render() {
         return (
             <div className="container" onContextMenu={this.setDrawMode}>
+                <h1>
+                    The game of life
+                </h1>
                 <canvas
                     ref={this.canvas}
                     width={this.state.canvasWidth}
@@ -135,12 +147,11 @@ export default class StartPage extends React.Component {
                     <Button className="button" onClick={this.onFlush} variant="outline-danger">Flush</Button>
                 </div>
                 <div className="controls">
-
-                    <Form.Group as={Row} style={{width: '50%'}}>
+                    <Form.Group as={Row} style={{width: '60%'}}>
                         <Form.Label column sm="3">
                             Epoch duration
                         </Form.Label>
-                        <Col sm="6">
+                        <Col sm="3">
                             <RangeSlider
                                 step={100}
                                 min={0}
@@ -150,9 +161,12 @@ export default class StartPage extends React.Component {
                             />
                         </Col>
                         <Col sm="3">
+                            <SizePicker onSizeSelect={this.onSizeSelect}/>
+                        </Col>
+                        <Col sm="3">
                             <Form.Check
                                 type="checkbox"
-                                label="Draw mode"
+                                label="Draw mode (right mouse button)"
                                 checked={this.state.drawMode}
                                 onChange={() => this.setState({
                                     drawMode: !this.state.drawMode

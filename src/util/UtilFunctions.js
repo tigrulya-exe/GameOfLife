@@ -1,4 +1,4 @@
-import Cell from "../shapes/Cell";
+import Cell from "../model/Cell";
 
 function getCellX(event, cellSize, offset){
     return Math.floor((event.pageX - event.currentTarget.offsetLeft) / (cellSize + offset))
